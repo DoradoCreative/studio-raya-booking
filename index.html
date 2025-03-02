@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Raya Photoshoot Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        .hidden { display: none; }
+        .booked { color: red; text-decoration: line-through; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="klasik.jpeg" alt="Studio Raya Photoshoot" style="width:100%; border-radius: 10px; margin-bottom: 20px;">
+        <h2>PORTRAITURE RAYA 2025 DORADO CREATIVE</h2>
+        
+        <label for="concept">Konsep:</label>
+        <select id="concept">
+            <option value="classic">Classic</option>
+            <option value="modern">Modern Minimalist</option>
+        </select>
+        
+        <h3>Pakej</h3>
+        <label><input type="radio" name="package" value="120"> RM120 - Shoot & Edit (20 min)</label><br>
+        <label><input type="radio" name="package" value="200"> RM200 - Shoot & Edit + 16"X24" Poster Frame (20 min)</label><br>
+        <label><input type="radio" name="package" value="250"> RM250 - Shoot & Edit + 20"X30" Poster Frame (20 min)</label><br>
+        
+        <h3>Tarikh & Slot</h3>
+        <input type="date" id="date" min="2025-03-01" max="2025-04-30">
+        <div id="timeSlots" class="hidden">
+            <h4>Waktu Slot</h4>
+            <div id="slots"></div>
+        </div>
+        
+        <h3>Maklumat Client</h3>
+       <input type="text" id="name" placeholder="Nama Penuh" required><br>
+        <input type="email" id="email" placeholder="Email" required><br>
+        <input type="tel" id="phone" placeholder="Telefon" required> <br>
+        
+        <label>Bilangan Dewasa(13thn keatas): <input type="number" id="adults" min="1" max="20" value="1"></label><br>
+        <label>Bilangan Kanak-Kanak(12thn kebawah): <input type="number" id="children" min="0" value="0"></label><br>
+         <p> Note: Cas tambahan RM10/pax dikenakan jika dewasa melebihi 10 orang</p>
+
+        
+        <h3>Maklumat Pembayaran</h3>
+        <button onclick="showPaymentDetails()">Buat Pembayaran </button>
+        <p>Jumlah Perlu Dibayar: RM <span id="total">0</span></p>
+        
+        <div id="paymentDetails" class="hidden">
+            <h4>Cara Pembayaran</h4>
+            <p>Bayar Kepada:  5521 0768 3540 (Maybank)</p>
+            <img src="qrcodedorado.jpeg" alt="QR Code for Payment" width="300">
+            <p><strong>Please share the receipt with the admin.</strong></p>
+
+        </div>
+    </div>
+    
+    <script>
+        const bookedSlots = { "2025-03-01": ["10:00am-10:30am"] }; // Example booked slot
+        
+        document.getElementById('date').addEventListener('change', function() {
+            const date = this.value;
+            const slots = [
+                "10:00am-10:30am", "10:30am-11:00am", "11:30am-12:00pm",
+                "12:00pm-12:30pm", "12:30pm-1:00pm", "2:00pm-2:30pm", "2:30pm-3:00pm", "3:00pm-3:30pm",
+                "3:30pm-4:00pm", "4:00pm-4:30pm", "4:30pm-5:00pm", "5:00pm-5:30pm", "5:30pm-6:00pm",
+                "6:30pm-7:00pm", "8:00pm-8:30pm", "8:30pm-9:00pm", "9:00pm-9:30pm", "9:30pm-10:00pm",
+                "10:00pm-10:30pm", "10:30pm-11:00pm"
+            ];
+            
+            let slotHTML = "";
+            slots.forEach(slot => {
+                const isBooked = bookedSlots[date] && bookedSlots[date].includes(slot);
+                slotHTML += `<label class="${isBooked ? 'booked' : ''}">
+                                <input type="radio" name="slot" value="${slot}" ${isBooked ? 'disabled' : ''}> ${slot}
+                             </label><br>`;
+            });
+            document.getElementById('slots').innerHTML = slotHTML;
+            document.getElementById('timeSlots').classList.remove('hidden');
+        });
+        
+        function showPaymentDetails() {
+            let packagePrice = document.querySelector('input[name="package"]:checked')?.value || 0;
+            let adults = parseInt(document.getElementById('adults').value);
+            let extraCharges = adults > 10 ? (adults - 10) * 10 : 0;
+            let total = parseInt(packagePrice) + extraCharges;
+            document.getElementById('total').textContent = total;
+            document.getElementById('paymentDetails').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
